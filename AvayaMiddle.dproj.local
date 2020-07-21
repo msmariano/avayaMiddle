@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2019/01/15 14:06:14.000.682,=C:\Users\leandro.hubner\Documents\Embarcadero\Studio\Projects\Unit3.pas</Transaction>
+    <Transaction>2019/01/15 14:18:19.000.894,C:\Users\leandro.hubner\Documents\Embarcadero\Studio\Projects\Unit3.pas=C:\Projetos\AvayaToolbar\toolbar.pas</Transaction>
+    <Transaction>2019/01/15 14:18:19.000.894,C:\Users\leandro.hubner\Documents\Embarcadero\Studio\Projects\Unit3.dfm=C:\Projetos\AvayaToolbar\toolbar.dfm</Transaction>
+    <Transaction>2019/01/15 14:18:30.000.586,C:\Users\leandro.hubner\Documents\Embarcadero\Studio\Projects\Project3.dproj=C:\Projetos\AvayaToolbar\AvayaToolbar.dproj</Transaction>
+    <Transaction>2019/01/15 16:07:43.000.032,=C:\Projetos\AvayaToolbar\Unit1.pas</Transaction>
+    <Transaction>2019/01/15 16:19:30.000.496,C:\Projetos\AvayaToolbar\Unit1.pas=C:\Projetos\AvayaToolbar\teclado.pas</Transaction>
+    <Transaction>2019/01/15 16:19:30.000.496,C:\Projetos\AvayaToolbar\Unit1.dfm=C:\Projetos\AvayaToolbar\teclado.dfm</Transaction>
+    <Transaction>2019/01/24 15:51:15.000.986,=C:\Projetos\AvayaToolbar\Unit2.pas</Transaction>
+    <Transaction>2019/01/24 15:53:01.000.319,C:\Projetos\AvayaToolbar\config.dfm=C:\Projetos\AvayaToolbar\Unit2.dfm</Transaction>
+    <Transaction>2019/01/24 15:53:01.000.319,C:\Projetos\AvayaToolbar\config.pas=C:\Projetos\AvayaToolbar\Unit2.pas</Transaction>
+    <Transaction>2019/01/28 09:11:38.000.439,=C:\Projetos\AvayaToolbar\Unit4.pas</Transaction>
+    <Transaction>2019/01/28 09:11:56.000.634,C:\Projetos\AvayaToolbar\historico.dfm=C:\Projetos\AvayaToolbar\Unit4.dfm</Transaction>
+    <Transaction>2019/01/28 09:11:56.000.634,C:\Projetos\AvayaToolbar\historico.pas=C:\Projetos\AvayaToolbar\Unit4.pas</Transaction>
+    <Transaction>2019/01/30 11:45:24.000.178,=C:\Projetos\AvayaToolbar\Win32\Debug\tapi3.dll</Transaction>
+    <Transaction>2019/01/30 11:45:40.000.668,C:\Projetos\AvayaToolbar\Win32\Debug\tapi3.dll=</Transaction>
+    <Transaction>2019/01/30 17:35:37.000.508,=C:\Projetos\AvayaToolbar\Unit5.pas</Transaction>
+    <Transaction>2019/01/30 17:37:49.000.697,C:\Projetos\AvayaToolbar\Unit5.pas=C:\Projetos\AvayaToolbar\testes.pas</Transaction>
+    <Transaction>2019/01/30 17:37:49.000.697,C:\Projetos\AvayaToolbar\Unit5.dfm=C:\Projetos\AvayaToolbar\testes.dfm</Transaction>
+    <Transaction>2019/01/30 17:46:03.000.363,=C:\Projetos\AvayaToolbar\Unit1.pas</Transaction>
+    <Transaction>2019/01/30 17:46:23.000.039,C:\Projetos\AvayaToolbar\Unit1.pas=C:\Projetos\AvayaToolbar\Tapi.pas</Transaction>
+    <Transaction>2019/02/06 11:41:17.000.548,=C:\Projetos\AvayaToolbar\Unit6.pas</Transaction>
+    <Transaction>2019/02/06 11:44:49.000.961,C:\Projetos\AvayaToolbar\Unit6.dfm=C:\Projetos\AvayaToolbar\transferir.dfm</Transaction>
+    <Transaction>2019/02/06 11:44:49.000.961,C:\Projetos\AvayaToolbar\Unit6.pas=C:\Projetos\AvayaToolbar\transferir.pas</Transaction>
+    <Transaction>2019/03/29 15:37:49.000.240,C:\Projetos\AvayaMiddle\AvayaMiddle.dproj=C:\Projetos\AvayaMiddle\AvayaToolbar.dproj</Transaction>
+  </Transactions>
+</BorlandProject>

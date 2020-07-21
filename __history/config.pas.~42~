@@ -1,0 +1,305 @@
+unit config;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, FireDAC.Stan.Intf,
+  FireDAC.Stan.Option, FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys.Intf,
+  FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.Phys,
+  FireDAC.Phys.SQLite, FireDAC.Phys.SQLiteDef, FireDAC.Stan.ExprFuncs,
+  FireDAC.VCLUI.Wait, FireDAC.Stan.Param, FireDAC.DatS, FireDAC.DApt.Intf,
+  FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client, hbTapi, hbTAPIUtils, hbTapiApi;
+
+type
+  TForm2 = class(TForm)
+    GroupBox1: TGroupBox;
+    GroupBox2: TGroupBox;
+    Button1: TButton;
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    Edit1: TEdit;
+    Edit2: TEdit;
+    FDConnection1: TFDConnection;
+    FDQuery2: TFDQuery;
+    DataSource2: TDataSource;
+    GroupBox3: TGroupBox;
+    LabelDevice: TLabel;
+    ComboBox_Device: TComboBox;
+    Label4: TLabel;
+    ComboBox_MediaMode: TComboBox;
+    Label5: TLabel;
+    ComboBox_Privileges: TComboBox;
+    Label6: TLabel;
+    ComboBox_Address: TComboBox;
+    CheckBox_SyncMode: TCheckBox;
+    CheckBox_BlockID: TCheckBox;
+    Label7: TLabel;
+    Edit3: TEdit;
+    procedure Button1Click(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure ComboBox_DeviceChange(Sender: TObject);
+    procedure ComboBox_PrivilegesChange(Sender: TObject);
+    procedure CheckBox_SyncModeClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form2: TForm2;
+
+implementation
+
+uses toolbar;
+
+{$R *.dfm}
+
+procedure TForm2.Button1Click(Sender: TObject);
+var
+  query : String;
+  get_url: string;
+  resp : String;
+  verifica : Integer;
+  LineDevice,MediaMode,Privileges,Address : String;
+begin
+  verifica := 0;
+
+  if Edit1.Text = '' then
+  begin
+    ShowMessage('ATENÇÃO! O campo Servidor está em branco! É necessário preencher o campo Servidor!');
+  end
+  else if Edit2.Text = '' then
+  begin
+    ShowMessage('ATENÇÃO! O campo Ramal está em branco! É necessário preencher o campo Ramal!');
+  end
+  else begin
+
+    if ComboBox_Device.Text = '' then
+    begin
+      ShowMessage('AVISO! O campo Line Device está em branco! As funcionalidades do TAPI ficarão inoperantes.');
+      verifica := 1;
+    end
+    else if ComboBox_MediaMode.Text = '' then
+    begin
+      ShowMessage('AVISO! O campo Media Mode está em branco! As funcionalidades do TAPI ficarão inoperantes.');
+      verifica := 1;
+    end
+    else if ComboBox_Privileges.Text = '' then
+    begin
+      ShowMessage('AVISO! O campo Privileges está em branco! As funcionalidades do TAPI ficarão inoperantes.');
+      verifica := 1;
+    end
+    else if ComboBox_Address.Text = '' then
+    begin
+      ShowMessage('AVISO! O campo Address está em branco! As funcionalidades do TAPI ficarão inoperantes.');
+      verifica := 1;
+    end;
+
+    if verifica = 0 then
+    begin
+      LineDevice := ComboBox_Device.Text;
+      MediaMode := ComboBox_MediaMode.Text;
+      Privileges := ComboBox_Privileges.Text;
+      Address := ComboBox_Address.Text;
+
+      form3.LineDevice := LineDevice;
+      form3.MediaMode := MediaMode;
+      form3.Privileges := Privileges;
+      form3.Address := Address;
+
+      query := 'update config set server="'+Edit1.Text+'", ramal="'+Edit2.Text+'", link="'+Edit3.Text+'", TapiLineDevice="'+LineDevice+'", TapiMediaMode="'+MediaMode+'", TapiPrevileges="'+Privileges+'", TapiAddress="'+Address+'", TapiSyncMode="True", TapiBlockId="False"';
+
+    end
+    else begin
+
+      query := 'update config set server="'+Edit1.Text+'", ramal="'+Edit2.Text+'", link="'+Edit3.Text+'"';
+
+    end;
+
+    FDQuery2.SQL.Clear;
+    FDQuery2.SQL.Add(query);
+    FDQuery2.Execute;
+
+    form3.Label2.Caption := Edit2.Text;
+    form3.Timer1.Enabled := False;
+
+    try
+      form3.server := Edit1.Text;
+      form3.ramal := Edit2.Text;
+      get_url := 'http://'+form3.server+'/identificadoravaya/login.php?d=';
+      resp := form3.IdHTTP1.Get(get_url+form3.ramal);
+      if resp = 'v:1.0;event:Login' then
+      begin
+        form3.Label4.Caption := 'Conectado';
+        form3.Label4.Left := 27;
+        form3.Label4.Font.Color := clGreen;
+        form3.Timer1.Enabled := True;
+      end
+      else
+      begin
+        form3.Label4.Caption := 'Erro - Conexão';
+        form3.Label4.Left := 15;
+        form3.Label4.Font.Color := clRed;
+      end;
+    except
+      form3.Label4.Caption := 'Erro - Conexão';
+      form3.Label4.Left := 15;
+      form3.Label4.Font.Color := clRed;
+      MessageDlg('Erro de Conexão! Verifique as configurações.',mtError,[mbOk],0);
+    end;
+    //form3.Timer1.Enabled := True;
+    form2.Close;
+  end;
+end;
+
+procedure TForm2.CheckBox_SyncModeClick(Sender: TObject);
+begin
+  form3.hbTapiLine1.Options.SyncMode := CheckBox_SyncMode.Checked;
+end;
+
+procedure TForm2.ComboBox_DeviceChange(Sender: TObject);
+begin
+  // If TapiLine is currently open then close it
+  form3.hbTapiLine1.Active := False;
+
+  // Set the TapiLine.DeviceID to use the device selected in the list box
+  form3.hbTapiLine1.DeviceID := ComboBox_Device.ItemIndex - 1;
+
+  // If there was a problem opening TapiLine last time then make sure that the
+  // following properties are reset to their default.
+  form3.hbTapiLine1.Privileges.None := TRUE;
+  if Pos('Owner', ComboBox_Privileges.Text) > 0 then
+    form3.hbTapiLine1.Privileges.Owner := TRUE;
+  if Pos('Monitor', ComboBox_Privileges.Text) > 0 then
+    form3.hbTapiLine1.Privileges.Monitor := TRUE;
+
+  if not form3.hbTapiLine1.Available then
+  begin
+    ComboBox_MediaMode.Items.Clear;
+    Combobox_Address.Items.Clear;
+    Exit;
+  end;
+
+  // Fill in the ComboBox with all supporting media modes.
+  LineMediaModesToStrList(form3.hbTapiLine1.Caps.MediaModes, ComboBox_MediaMode.Items);
+  if ComboBox_MediaMode.Items.Count > 0 then
+    ComboBox_MediaMode.ItemIndex := 0;
+
+  Combobox_Address.Items.Assign(form3.hbTapiLine1.AddressList);
+  if ComboBox_Address.Items.Count > 0 then
+    ComboBox_Address.ItemIndex := 0;
+
+  try
+    form3.hbTapiLine1.Active := True;
+//    ListBox1.Items.add(Format('Line is opened %d times',[hbTapiLine1.Status.NumOpens]));
+  except
+    on E:EhbTapiError do
+      case E.ErrorCode of
+         LINEERR_INVALMEDIAMODE :
+         begin
+           try
+             form3.hbTapiLine1.Privileges.Owner := FALSE;
+             form3.hbTapiLine1.Active := True;
+           except
+             on E:Exception do
+               MessageDlg('Error opening line device: ' + E.Message, mtError, [mbOk],0);
+           end;
+           MessageDlg('This device is not 100% TAPI compliant',mtWarning, [mbOk],0);
+         end;
+      else  // Time for a little error checking
+        MessageDlg('Error opening line device: ' + E.Message, mtError, [mbOk],0);
+      end;
+  end;
+end;
+
+procedure TForm2.ComboBox_PrivilegesChange(Sender: TObject);
+begin
+  if ComboBox_Device.ItemIndex > 0 then
+    ComboBox_DeviceChange(nil);
+end;
+
+procedure TForm2.FormCreate(Sender: TObject);
+var
+  indice : Integer;
+begin
+
+  indice := Form3.hbTapiLine1.DeviceList.IndexOf(Form3.LineDevice);
+  if indice <> -1 then
+  begin
+    Form3.hbTapiLine1.DeviceID := indice;
+    Form3.hbTapiLine1.MediaModes := StrToLineMediaMode(form3.MediaMode);
+    indice := Form3.hbTapiLine1.AddressList.IndexOf(form3.Address);
+    if indice <> -1 then
+    begin
+      Form3.hbTapiLine1.Address[form3.Address].Init;
+    end;
+    Form3.hbTapiLine1.Active := true;
+  end
+
+end;
+
+procedure TForm2.FormShow(Sender: TObject);
+var
+  query : String;
+  indice,indice1,indice2 : Integer;
+begin
+
+  //Pega linha da configuração se existir retorna diferente de -1
+  indice := Form3.hbTapiLine1.DeviceList.IndexOf(Form3.LineDevice);
+
+  // Fill in the ComboBox with all available telephony line devices
+  ComboBox_Device.Items.Assign(form3.hbTapiLine1.DeviceList);
+  if ComboBox_Device.Items.Count > 0 then
+  begin
+     if indice <> -1 then
+     begin
+       Form3.hbTapiLine1.DeviceID := indice;
+       ComboBox_Device.Items.Insert(0, Form3.hbTapiLine1.DeviceName);
+     end
+     else
+       ComboBox_Device.Items.Insert(0, '- none -');
+  end
+  else
+    ComboBox_Device.Items.Add('- none -');
+
+  form3.hbTapiLine1.Options.SyncMode := CheckBox_SyncMode.Checked;
+
+  ComboBox_Device.ItemIndex     := 0;
+  ComboBox_Privileges.ItemIndex := 0;
+
+  //Pega configuraçoes da linha atual
+  if indice <> -1 then
+  begin
+   Combobox_Address.Items.Assign(form3.hbTapiLine1.AddressList);
+
+   indice := Form3.hbTapiLine1.AddressList.IndexOf(form3.Address);
+    if indice <> -1 then
+    begin
+      Form3.hbTapiLine1.Address[form3.Address].Init;
+      ComboBox_Address.Items.Insert(0,form3.Address);
+    end;
+    if ComboBox_Address.Items.Count > 0 then
+     ComboBox_Address.ItemIndex := 0;
+
+    LineMediaModesToStrList(form3.hbTapiLine1.Caps.MediaModes, ComboBox_MediaMode.Items);
+    ComboBox_MediaMode.Items.Insert(0,form3.MediaMode);
+    if ComboBox_MediaMode.Items.Count > 0 then
+     ComboBox_MediaMode.ItemIndex := 0;
+  end;
+
+  query := 'Select server, ramal, link from config';
+  FDQuery2.SQL.Clear;
+  FDQuery2.SQL.Add(query);
+  FDQuery2.Open;
+
+  Edit1.Text := FDQuery2.Fields[0].Value;
+  Edit2.Text := FDQuery2.Fields[1].Value;
+  Edit3.Text := FDQuery2.Fields[2].Value;
+
+end;
+
+end.

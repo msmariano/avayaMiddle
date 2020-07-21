@@ -242,7 +242,7 @@ var
   get_url: string;
   resp : String;
   query : String;
-  linhas, i, lig_perdidas, x : Integer;
+  linhas, i, lig_perdidas, x,teste : Integer;
 begin
   hold := false;
   try
@@ -259,6 +259,23 @@ begin
     Privileges := FDQuery2.Fields[4].Value;
     Address := FDQuery2.Fields[5].Value;
     SyncMode := FDQuery2.Fields[6].Value;
+
+
+
+     //ShowMessage(LineDevice);
+
+     teste :=  hbTapiLine1.DeviceList.Count;
+
+
+     hbTapiLine1.DeviceID := hbTapiLine1.DeviceList.IndexOf(LineDevice);
+
+     for I := 0 to teste-1 do
+     begin
+        ShowMessage(hbTapiLine1.DeviceList[I]);
+     end;
+
+
+     //ShowMessage(IntToStr(hbTapiLine1.DeviceList.Count));
 
     //CARREGAR TAPI NA INICIALIZAÇÃO
 

@@ -163,7 +163,7 @@ end;
 
 procedure TForm2.ComboBox_DeviceChange(Sender: TObject);
 begin
- // If TapiLine is currently open then close it
+  // If TapiLine is currently open then close it
   form3.hbTapiLine1.Active := False;
 
   // Set the TapiLine.DeviceID to use the device selected in the list box
@@ -223,33 +223,73 @@ begin
 end;
 
 procedure TForm2.FormCreate(Sender: TObject);
+var
+  indice : Integer;
 begin
-  form3.hbTapiLine1.Options.SyncMode := CheckBox_SyncMode.Checked;
-  // Fill in the ComboBox with all available telephony line devices
-  ComboBox_Device.Items.Assign(form3.hbTapiLine1.DeviceList);
-  if ComboBox_Device.Items.Count > 0 then
-    ComboBox_Device.Items.Insert(0, '- none -')
-  else
-    ComboBox_Device.Items.Add('- none -');
 
-  ComboBox_Device.ItemIndex     := 0;
-  ComboBox_Privileges.ItemIndex := 0;
+  indice := Form3.hbTapiLine1.DeviceList.IndexOf(Form3.LineDevice);
+  if indice <> -1 then
+  begin
+    Form3.hbTapiLine1.DeviceID := indice;
+    Form3.hbTapiLine1.MediaModes := StrToLineMediaMode(form3.MediaMode);
+    indice := Form3.hbTapiLine1.AddressList.IndexOf(form3.Address);
+    if indice <> -1 then
+    begin
+      Form3.hbTapiLine1.Address[form3.Address].Init;
+    end;
+    Form3.hbTapiLine1.Active := true;
+  end
+
 end;
 
 procedure TForm2.FormShow(Sender: TObject);
 var
   query : String;
+  indice,indice1,indice2 : Integer;
 begin
-  form3.hbTapiLine1.Options.SyncMode := CheckBox_SyncMode.Checked;
+
+  //Pega linha da configuração se existir retorna diferente de -1
+  indice := Form3.hbTapiLine1.DeviceList.IndexOf(Form3.LineDevice);
+
   // Fill in the ComboBox with all available telephony line devices
   ComboBox_Device.Items.Assign(form3.hbTapiLine1.DeviceList);
   if ComboBox_Device.Items.Count > 0 then
-    ComboBox_Device.Items.Insert(0, '- none -')
+  begin
+     if indice <> -1 then
+     begin
+       Form3.hbTapiLine1.DeviceID := indice;
+       ComboBox_Device.Items.Insert(0, Form3.hbTapiLine1.DeviceName);
+     end
+     else
+       ComboBox_Device.Items.Insert(0, '- none -');
+  end
   else
     ComboBox_Device.Items.Add('- none -');
 
+  form3.hbTapiLine1.Options.SyncMode := CheckBox_SyncMode.Checked;
+
   ComboBox_Device.ItemIndex     := 0;
   ComboBox_Privileges.ItemIndex := 0;
+
+  //Pega configuraçoes da linha atual
+  if indice <> -1 then
+  begin
+   Combobox_Address.Items.Assign(form3.hbTapiLine1.AddressList);
+
+   indice := Form3.hbTapiLine1.AddressList.IndexOf(form3.Address);
+    if indice <> -1 then
+    begin
+      ComboBox_Address.Items.Insert(0,form3.Address);
+      Form3.hbTapiLine1.Address[form3.Address].Init;
+    end;
+    if ComboBox_Address.Items.Count > 0 then
+     ComboBox_Address.ItemIndex := 0;
+
+    LineMediaModesToStrList(form3.hbTapiLine1.Caps.MediaModes, ComboBox_MediaMode.Items);
+    ComboBox_MediaMode.Items.Insert(0,form3.MediaMode);
+    if ComboBox_MediaMode.Items.Count > 0 then
+     ComboBox_MediaMode.ItemIndex := 0;
+  end;
 
   query := 'Select server, ramal, link from config';
   FDQuery2.SQL.Clear;

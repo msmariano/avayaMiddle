@@ -3728,7 +3728,6 @@ object Form3: TForm3
     BevelOuter = bvLowered
     BorderWidth = 2
     TabOrder = 1
-    ExplicitHeight = 46
     object Label1: TLabel
       Left = 11
       Top = 5
