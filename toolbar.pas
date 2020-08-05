@@ -77,6 +77,10 @@ type
     procedure Button3Click(Sender: TObject);
     procedure Sair1Click(Sender: TObject);
     procedure Memo1DblClick(Sender: TObject);
+    procedure hbTapiLine1CallState(Sender: ThbTapiLine; Call: ThbTapiCall;
+      CallState: Cardinal);
+    procedure hbTapiLine1CallEnd(Sender: ThbTapiLine; Call: ThbTapiCall);
+    procedure hbTapiLine1Disconnected(Sender: ThbTapiLine; Call: ThbTapiCall);
   private
     FNumMakeCall : Integer;
   public
@@ -262,19 +266,6 @@ begin
 
 
 
-     //ShowMessage(LineDevice);
-
-     teste :=  hbTapiLine1.DeviceList.Count;
-
-
-     hbTapiLine1.DeviceID := hbTapiLine1.DeviceList.IndexOf(LineDevice);
-
-     for I := 0 to teste-1 do
-     begin
-        ShowMessage(hbTapiLine1.DeviceList[I]);
-     end;
-
-
      //ShowMessage(IntToStr(hbTapiLine1.DeviceList.Count));
 
     //CARREGAR TAPI NA INICIALIZAÇÃO
@@ -371,6 +362,31 @@ begin
 
   Application.ShowMainForm := false;
 
+end;
+
+procedure TForm3.hbTapiLine1CallEnd(Sender: ThbTapiLine; Call: ThbTapiCall);
+begin
+  //Memo1.Lines.Add('hbTapiLine1CallEnd');
+  Timer2.Enabled := False;
+            Timer3.Enabled := False;
+            EditDisplay.Clear;
+            EditDisplay.Enabled := True;
+            Label4.Caption := 'Conectado';
+            Label4.Left := 27;
+            Label4.Font.Color := clGreen;
+            Label4.Font.Style := [];
+end;
+
+procedure TForm3.hbTapiLine1CallState(Sender: ThbTapiLine; Call: ThbTapiCall;
+  CallState: Cardinal);
+begin
+  //Memo1.Lines.Add('hbTapiLine1CallState');
+end;
+
+procedure TForm3.hbTapiLine1Disconnected(Sender: ThbTapiLine;
+  Call: ThbTapiCall);
+begin
+  //Memo1.Lines.Add('hbTapiLine1Disconnected');
 end;
 
 procedure TForm3.Image10Click(Sender: TObject);

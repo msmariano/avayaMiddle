@@ -4288,6 +4288,9 @@ object Form3: TForm3
   object hbTapiLine1: ThbTapiLine
     CallOptions.GatherDigits.TerminationDigits = '*#'
     CallParams.Flags = 0
+    OnCallState = hbTapiLine1CallState
+    OnDisconnected = hbTapiLine1Disconnected
+    OnCallEnd = hbTapiLine1CallEnd
     Left = 472
   end
   object Timer4: TTimer

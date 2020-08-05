@@ -194,7 +194,7 @@ begin
     ComboBox_Address.ItemIndex := 0;
 
   try
-    form3.hbTapiLine1.Active := True;
+    //form3.hbTapiLine1.Active := True;
 //    ListBox1.Items.add(Format('Line is opened %d times',[hbTapiLine1.Status.NumOpens]));
   except
     on E:EhbTapiError do
@@ -248,6 +248,7 @@ var
   indice,indice1,indice2 : Integer;
 begin
 
+
   //Pega linha da configuração se existir retorna diferente de -1
   indice := Form3.hbTapiLine1.DeviceList.IndexOf(Form3.LineDevice);
 
@@ -257,7 +258,6 @@ begin
   begin
      if indice <> -1 then
      begin
-       Form3.hbTapiLine1.DeviceID := indice;
        ComboBox_Device.Items.Insert(0, Form3.hbTapiLine1.DeviceName);
      end
      else
@@ -280,7 +280,6 @@ begin
     if indice <> -1 then
     begin
       ComboBox_Address.Items.Insert(0,form3.Address);
-      Form3.hbTapiLine1.Address[form3.Address].Init;
     end;
     if ComboBox_Address.Items.Count > 0 then
      ComboBox_Address.ItemIndex := 0;
